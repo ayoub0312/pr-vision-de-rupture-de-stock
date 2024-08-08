@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Stock</title>
+    <link rel="stylesheet" href="{% static 'css/ayoub.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <!-- Copy the same navigation structure as in stock.html -->
+            <ul>
+                <li>
+                    <a href="{% url 'base:vente' %}">
+                        <span class="icon">
+                            <ion-icon name ="cart"></ion-icon>    
+                        </span>
+                        <span class ="title">Vente</span>
+                    </a>
+                </li> 
+                <li>
+                    <a href="{% url 'base:home' %}">
+                        <span class="icon">
+                            <ion-icon name="home"></ion-icon>
+                        </span>
+                        <span class="title">Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:stock' %}">
+                        <span class="icon">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </span>
+                        <span class ="title">Stock</span>
+                    </a>
+                </li> 
+                <li>
+                    <a href="{% url 'base:dashboard' %}">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Tableau de bord</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:settings' %}">
+                        <span class="icon">
+                            <ion-icon name="settings"></ion-icon>
+                        </span>
+                        <span class="title">Paramètre</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:logout' %}">
+                        <span class="icon">
+                            <ion-icon name="log-out"></ion-icon>
+                        </span>
+                        <span class="title">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main">
+            <div class="topbar">
+                <!-- Placeholder for consistency, no function here -->
+                <div class="user">
+                    <img src="{% static 'img/logo.png' %}" alt="User">
+                </div>
+            </div>
+            <div class="form-container">
+                <h2>Delete Vente</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <p>Are you sure you want to delete "{{ vente. }}"?</p>
+                    <button type="submit">Delete</button>
+                    <a href="{% url 'base:vente' %}">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ionicons for consistent icon use -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+</body>
+</html>
+{% endblock %}

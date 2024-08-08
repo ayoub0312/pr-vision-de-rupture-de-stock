@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'css/ayoub.css' %}">
+        <div class="container">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="{% url 'base:settings' %}">
+                            <span class="icon">
+                                <ion-icon name="settings-outline"></ion-icon>
+                            </span>
+                            <span class ="title">Paramètre</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a href="{% url 'base:home' %}">
+                            <span class="icon">
+                                <ion-icon name ="home"></ion-icon>
+                            </span>
+                            <span class ="title">Accueil</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a href="{% url 'base:dashboard' %}">
+                            <span class="icon">
+                                <ion-icon name ="analytics"></ion-icon>    
+                            </span>
+                            <span class ="title">Tableau de bord</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a href="{% url 'base:vente' %}">
+                            <span class="icon">
+                                <ion-icon name="cart"></ion-icon>    
+                            </span>
+                            <span class="title">Vente</span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="{% url 'base:stock' %}">
+                        <span class="icon">
+                            <ion-icon name="cube"></ion-icon>
+                        </span>
+                        <span class="title">Stock</span>
+                    </a>
+                </li>
+                    <li>
+                        <a href="{% url "base:logout" %}">
+                            <span class="icon">                     
+                                <ion-icon name="log-out"></ion-icon>
+                            </span>
+                            <span class="title">Déconnexion</span>
+                        </a>
+                    </li>
+                
+                </ul>
+            </div>
+        </div>    
+    
+    <!---- ========== Scripts========= -->
+
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+
+            <div class="search">
+                <label>
+                    <input type="text" placeholder="Search here">
+                    <ion-icon name="search-outline"></ion-icon>
+                </label>
+            </div>
+
+            <div class="user">
+                <img src="static/img/logo.png" alt="">
+            </div>
+        </div>
+
+
+
+    <script src="static/js/main.js"></script>
+
+
+
+
+    <!--=====ionicons-->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</div>
+{% endblock content %}

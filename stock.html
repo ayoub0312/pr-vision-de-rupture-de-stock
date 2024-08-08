@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management</title>
+    <link rel="stylesheet" href="{% static 'css/ayoub.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="navigation">
+            <!-- Copy the same navigation structure as in stock.html -->
+            <ul>
+                <li>
+                    <a href="{% url 'base:stock' %}">
+                        <span class="icon">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </span>
+                        <span class="title">Stock</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:home' %}">
+                        <span class="icon">
+                            <ion-icon name="home"></ion-icon>
+                        </span>
+                        <span class="title">Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:vente' %}">
+                        <span class="icon">
+                            <ion-icon name="cart"></ion-icon>
+                        </span>
+                        <span class="title">Vente</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:dashboard' %}">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Tableau de bord</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:settings' %}">
+                        <span class="icon">
+                            <ion-icon name="settings"></ion-icon>
+                        </span>
+                        <span class="title">Paramètre</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'base:logout' %}">
+                        <span class="icon">
+                            <ion-icon name="log-out"></ion-icon>
+                        </span>
+                        <span class="title">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>    
+    
+    <div class="main">
+        <div class="topbar">
+            <div class="search-add">
+                <form method="get" action="{% url 'base:stock' %}" class="search-form">
+                    <input type="text" name="search" placeholder="Search by article name" class="search-input">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+                <button onclick="window.location.href='{% url 'base:add_stock' %}'" class="add-button">+</button>
+            </div>
+            <div class="user">
+                <img src="{% static 'img/logo.png' %}" alt="User">
+            </div>
+        </div>
+        <div class="stock-table">
+            <h2>Table de Stock</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Article</th>
+                        <th>Nom Article</th>
+                        <th>Date Mvt</th>
+                        <th>Num Mvt</th>
+                        <th>Qte Stock Initial</th>
+                        <th>Qte Ent</th>
+                        <th>Date Per</th>
+                        <th>Num Lot</th>
+                        <th>Destination Origine</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock_entry in page_obj %}
+                    <tr>
+                        <td>{{ stock_entry.ID_ARTICLE }}</td>
+                        <td>{{ stock_entry.NOM_ARTICLE }}</td>
+                        <td>{{ stock_entry.DATE_MVT }}</td>
+                        <td>{{ stock_entry.NUM_MVT }}</td>
+                        <td>{{ stock_entry.QTE_STOCK_INITIAL }}</td>
+                        <td>{{ stock_entry.QTE_ENT }}</td>
+                        <td>{{ stock_entry.DATE_PER }}</td>
+                        <td>{{ stock_entry.NUM_LOT }}</td>
+                        <td>{{ stock_entry.DESTINATION_ORIGINE }}</td>
+                        <td>
+                            <a href="{% url 'base:edit_stock' stock_entry.ID_STOCK %}">
+                                <ion-icon name="create-outline"></ion-icon>
+                            </a>
+                            <a href="{% url 'base:delete_stock' stock_entry.ID_STOCK %}" onclick="return confirm('Are you sure?');">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No entries found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination controls -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--=====ionicons-->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
+{% endblock content %}

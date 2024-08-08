@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'css/ayoub.css' %}">
+    <div class="container">
+        <div class="navigation">
+            <!-- Navigation Menu -->
+            <ul>
+                <li><a href="{% url 'base:home' %}"><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">Accueil</span></a></li>
+                <li><a href="{% url 'base:dashboard' %}"><span class="icon"><ion-icon name="analytics"></ion-icon></span><span class="title">Tableau de bord</span></a></li>
+                <li><a href="{% url 'base:vente' %}"><span class="icon"><ion-icon name="cart"></ion-icon></span><span class="title">Vente</span></a></li>
+                <li><a href="{% url 'base:stock' %}"><span class="icon"><ion-icon name="cube"></ion-icon></span><span class="title">Stock</span></a></li>
+                <li><a href="{% url 'base:settings' %}"><span class="icon"><ion-icon name="settings"></ion-icon></span><span class="title">Settings</span></a></li>
+                <li><a href="{% url 'base:logout' %}"><span class="icon"><ion-icon name="log-out"></ion-icon></span><span class="title">Déconnexion</span></a></li>
+            </ul>
+        </div>
+
+     <div class="main">
+            <h2>Télécharger les fichiers de vente et de stock</h2>
+            <label for="articleName">Nom de l'article:</label>
+            <input type="text" id="articleName" name="articleName" required>
+            <label for="year">Année:</label>
+            <select id="year" name="year">
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+            </select>
+
+            <div class="upload-forms">
+                <form id="uploadStockForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="stock_file">Choisir un fichier de stock:</label>
+                    <input type="file" name="file" id="stock_file" accept=".csv">
+                    <input type="hidden" name="fileType" value="stock">
+                    <button type="submit">Envoyer Stock</button>
+                    <span id="stockMessage"></span>
+                </form>
+
+                <form id="uploadVenteForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="vente_file">Choisir un fichier de vente:</label>
+                    <input type="file" name="file" id="vente_file" accept=".csv">
+                    <input type="hidden" name="fileType" value="vente">
+                    <button type="submit">Envoyer Vente</button>
+                    <span id="venteMessage"></span>
+                </form>
+            </div>
+            <button type="button" id="executeETL">Sauvegarder les Données</button>
+        </div>
+    </div>
+    <script>
+        function validateFileName(fileInputId, messageElementId, prefix) {
+            const fileInput = document.getElementById(fileInputId);
+            const filePath = fileInput.value.split('\\').pop();  // Get the file name only
+            const articleName = document.getElementById('articleName').value;
+            const year = document.getElementById('year').value;
+            const regex = new RegExp(`^${prefix}_${articleName}_${year}\.csv$`);
+
+            if (!regex.test(filePath)) {
+                document.getElementById(messageElementId).innerText = `Nom de fichier invalide. Le format doit être ${prefix}_${articleName}_${year}.csv`;
+                return false;
+            }
+            document.getElementById(messageElementId).innerText = '';  // Clear any previous error message
+            return true;
+        }
+
+        document.getElementById('uploadStockForm').onsubmit = function(event) {
+            event.preventDefault();
+            if (validateFileName('stock_file', 'stockMessage', 'stock')) {
+                let formData = new FormData(this);
+                formData.append('year', document.getElementById('year').value);
+                formData.append('articleName', document.getElementById('articleName').value);
+                fetch('', {method: 'POST', body: formData})
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('stockMessage').innerText = data.message;
+                    })
+                    .catch(error => {
+                        document.getElementById('stockMessage').innerText = 'Erreur lors du téléchargement du fichier de stock.';
+                    });
+            }
+        };
+
+        document.getElementById('uploadVenteForm').onsubmit = function(event) {
+            event.preventDefault();
+            if (validateFileName('vente_file', 'venteMessage', 'vente')) {
+                let formData = new FormData(this);
+                formData.append('year', document.getElementById('year').value);
+                formData.append('articleName', document.getElementById('articleName').value);
+                fetch('', {method: 'POST', body: formData})
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('venteMessage').innerText = data.message;
+                    })
+                    .catch(error => {
+                        document.getElementById('venteMessage').innerText = 'Erreur lors du téléchargement du fichier de vente.';
+                    });
+            }
+        };
+
+        document.getElementById('executeETL').onclick = function() {
+            fetch('{% url 'base:execute_etl' %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if(data.status === 'success') {
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
+{% endblock content %}
